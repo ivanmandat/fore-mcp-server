@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "fore": {
+      "command": "node",
+      "args": ["dist/index.js"],
+      "cwd": "C:/projects/fore-language-extension/fore-mcp-server"
+    }
+  }
+}
+
