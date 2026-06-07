@@ -1,6 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
+import { loadGuidesIndex, findGuidesForInterface } from "./guides.js";
+import { loadMembersIndex, getTopMembersWithExamples, listInterfaceMembers } from "./members.js";
+import { loadCodeExamplesIndex } from "./code-examples.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -133,214 +136,49 @@ export async function getInterfaceInfo(index: DocsIndex, name: string): Promise<
     result += entry.methods.map(m => `- \`${m}()\``).join("\n");
     result += "\n\n";
   }
+
+  const guidesIndex = loadGuidesIndex();
+  const membersIndex = loadMembersIndex();
+  const examplesIndex = loadCodeExamplesIndex();
+
+  const relatedGuides = findGuidesForInterface(guidesIndex, name, 5);
+  if (relatedGuides.length > 0) {
+    result += `## Related Guides\n`;
+    for (const g of relatedGuides) {
+      result += `- **${g.title}** (${g.type}) — docs/${g.path}\n`;
+      if (g.summary) result += `  ${g.summary.slice(0, 120)}...\n`;
+    }
+    result += "\n";
+  }
+
+  const membersWithExamples = getTopMembersWithExamples(membersIndex, name, 10);
+  const allMembers = listInterfaceMembers(membersIndex, name);
+  if (allMembers.length > 0) {
+    result += `## Members (${allMembers.length} total`;
+    if (membersWithExamples.length > 0) {
+      result += `, ${membersWithExamples.length} with examples`;
+    }
+    result += `)\n`;
+    const shown = membersWithExamples.length > 0 ? membersWithExamples : allMembers.slice(0, 15);
+    for (const m of shown) {
+      result += `- \`${m.id}\` (${m.memberType})`;
+      if (m.hasExample) result += ` [example]`;
+      if (m.description) result += ` — ${m.description.slice(0, 80)}`;
+      result += `\n`;
+    }
+    result += "\n";
+  }
+
+  const exampleCount = examplesIndex.byEntity[name]?.length ?? 0;
+  if (exampleCount > 0) {
+    result += `## Code Examples\n`;
+    result += `${exampleCount} пример(ов) в базе. Используйте get_code_examples("${name}").\n\n`;
+  }
   
   result += `## Full Documentation\n\n${fullDescription}`;
   
   return result;
 }
 
-/**
- * Получает примеры кода
- */
-export function getCodeExamples(topic: string): string {
-  const examples: Record<string, string> = {
-    IPrxReport: `# IPrxReport Code Examples
-
-## Access Active Report
-\`\`\`fore
-Var
-    report: IPrxReport;
-Begin
-    report := PrxReport.ActiveReport;
-End
-\`\`\`
-
-## Find Control by ID
-\`\`\`fore
-Var
-    ctrl: IPrxControl;
-Begin
-    ctrl := Report.Controls.FindById("CONTROL_ID");
-    ctrl.Value := "New Value";
-    Report.Recalc;
-End
-\`\`\`
-
-## Iterate Controls
-\`\`\`fore
-Var
-    controls: IPrxControls;
-    ctrl: IPrxControl;
-    i: Integer;
-Begin
-    controls := Report.Controls;
-    For i := 0 To controls.Count - 1 Do
-        ctrl := controls.Item(i);
-        Debug.WriteLine(ctrl.Id + ": " + ctrl.Value.ToString);
-    End For;
-End
-\`\`\``,
-
-    IMetabase: `# IMetabase Code Examples
-
-## Get Active Metabase
-\`\`\`fore
-Var
-    mb: IMetabase;
-Begin
-    mb := MetabaseClass.Active;
-End
-\`\`\`
-
-## Open Object by ID
-\`\`\`fore
-Var
-    mb: IMetabase;
-    obj: IMetabaseObjectDescriptor;
-    inst: IMetabaseObjectInstance;
-Begin
-    mb := MetabaseClass.Active;
-    obj := mb.ItemByIdNamespace("OBJECT_ID", BA_KEY);
-    inst := obj.Open(Null);
-End
-\`\`\`
-
-## Find Object by Name
-\`\`\`fore
-Var
-    mb: IMetabase;
-    obj: IMetabaseObjectDescriptor;
-Begin
-    mb := MetabaseClass.Active;
-    obj := mb.ItemByName("Object Name");
-End
-\`\`\``,
-
-    "sql-execution": `# SQL Execution Examples
-
-## Simple Query
-\`\`\`fore
-Var
-    db: IDatabaseInstance;
-    cmd: IDalCommand;
-    cur: IDalCursor;
-Begin
-    db := MetabaseClass.Active.ItemByIdNamespace("DB_ID", BA_KEY).Open(Null) As IDatabaseInstance;
-    cmd := db.Connection.CreateCommand("");
-    cmd.SQL := "SELECT * FROM table";
-    cur := cmd.CreateCursor;
-    While Not cur.Eof Do
-        Debug.WriteLine(cur.Fields.Item(0).Value.ToString);
-        cur.MoveNext;
-    End While;
-    cur.Close;
-    cmd.Close;
-End
-\`\`\`
-
-## Parameterized Query
-\`\`\`fore
-Var
-    db: IDatabaseInstance;
-    cmd: IDalCommand;
-    cur: IDalCursor;
-Begin
-    db := MetabaseClass.Active.ItemByIdNamespace("DB_ID", BA_KEY).Open(Null) As IDatabaseInstance;
-    cmd := db.Connection.CreateCommand("");
-    cmd.SQL := "SELECT * FROM users WHERE id = :userId AND status = :status";
-    cmd.Params.Item("userId").Value := 123;
-    cmd.Params.Item("status").Value := "active";
-    cur := cmd.CreateCursor;
-    // ... process results
-    cur.Close;
-    cmd.Close;
-End
-\`\`\``,
-
-    "dimension-iteration": `# Dimension Iteration Examples
-
-## Iterate All Elements
-\`\`\`fore
-Var
-    dim: IDimInstance;
-    elements: IDimElements;
-    i: Integer;
-Begin
-    dim := MetabaseClass.Active.ItemByIdNamespace("DICT_ID", BA_KEY).Open(Null) As IDimInstance;
-    elements := dim.Elements;
-    For i := 0 To elements.Count - 1 Do
-        Debug.WriteLine("ID: " + elements.Id(i).ToString);
-        Debug.WriteLine("Name: " + elements.Name(i));
-    End For;
-End
-\`\`\`
-
-## Find Element by Name
-\`\`\`fore
-Var
-    dim: IDimInstance;
-    elements: IDimElements;
-    index: Integer;
-Begin
-    dim := MetabaseClass.Active.ItemByIdNamespace("DICT_ID", BA_KEY).Open(Null) As IDimInstance;
-    elements := dim.Elements;
-    index := elements.FindByName("Element Name");
-    If index >= 0 Then
-        Debug.WriteLine("Found at index: " + index.ToString);
-    End If;
-End
-\`\`\``,
-
-    "events-class": `# EventsClass Examples
-
-## Basic EventsClass
-\`\`\`fore
-Public Class EventsClass: ReportEvents
-
-    Public Sub OnBeforeOpenReport(Report: IPrxReport; Var Cancel: Boolean);
-    Begin
-        // Initialize report
-        Report.Recalc;
-    End Sub OnBeforeOpenReport;
-
-    Public Sub OnChangeControlValue(Control: IPrxControl);
-    Begin
-        PrxReport.ActiveReport.Recalc;
-    End Sub OnChangeControlValue;
-
-End Class EventsClass;
-\`\`\`
-
-## With Grid Parameters
-\`\`\`fore
-Public Class EventsClass: ReportEvents
-
-    Public Sub OnBeforeOpenReport(Report: IPrxReport; Var Cancel: Boolean);
-    Var
-        grid: IEaxGrid;
-        params: IMetabaseObjectParamValues;
-    Begin
-        grid := Report.DataArea.Slices.Item(0).Views.FindById("GRID1") As IEaxGrid;
-        If grid <> Null Then
-            params := grid.ParamValues;
-            params.FindById("P_DATE").Value := DateTime.Today;
-        End If;
-        Report.Recalc;
-    End Sub OnBeforeOpenReport;
-
-End Class EventsClass;
-\`\`\``,
-  };
-  
-  const topicLower = topic.toLowerCase();
-  
-  // Ищем по ключу
-  for (const [key, value] of Object.entries(examples)) {
-    if (key.toLowerCase() === topicLower || key.toLowerCase().includes(topicLower)) {
-      return value;
-    }
-  }
-  
-  return `No examples found for "${topic}". Available topics:\n${Object.keys(examples).map(k => `- ${k}`).join("\n")}`;
-}
+// getCodeExamples перенесён в code-examples.ts
 

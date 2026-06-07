@@ -1,0 +1,1010 @@
+{
+  "recipes": [
+    {
+      "id": "report-events-module",
+      "title": "Модуль обработки событий отчёта",
+      "keywords": ["события", "отчёт", "отчет", "EventsClass", "ReportEvents", "модуль событий"],
+      "description": "Создание модуля обработки событий регламентного отчёта: инициализация при открытии, реакция на контролы, проверка перед сохранением.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Создать класс EventsClass",
+          "description": "Объявите Public Class EventsClass: ReportEvents и реализуйте обработчики событий.",
+          "interfaces": ["ReportEvents", "IPrxReportUserEvents"],
+          "members": [],
+          "guides": ["KeReport/Intro/Hierarchy/KeReport_H_Events.md"],
+          "exampleQueries": ["EventsClass", "ReportEvents", "IPrxReportUserEvents"]
+        },
+        {
+          "order": 2,
+          "title": "Реализовать обработчики EventOn*",
+          "description": "Переопределите методы IPrxReportUserEvents: EventOnBeforeOpenReport, EventOnChangeControlValue, EventOnBeforeSaveReport и др.",
+          "interfaces": ["IPrxReportUserEvents"],
+          "members": [
+            "IPrxReportUserEvents.EventOnBeforeOpenReport",
+            "IPrxReportUserEvents.EventOnChangeControlValue",
+            "IPrxReportUserEvents.EventOnBeforeSaveReport"
+          ],
+          "guides": ["KeReport/Intro/Hierarchy/KeReport_H_Events.md"],
+          "exampleQueries": ["EventOnBeforeOpenReport", "EventOnChangeControlValue"]
+        },
+        {
+          "order": 3,
+          "title": "Подключить модуль к отчёту",
+          "description": "Используйте IPrxReport.ForeModule или AddEventHandler для привязки модуля событий.",
+          "interfaces": ["IPrxReport"],
+          "members": ["IPrxReport.ForeModule"],
+          "guides": ["KeReport/Intro/KeReport_Programming.md"],
+          "exampleQueries": ["IPrxReport.ForeModule", "IPrxReport"]
+        }
+      ]
+    },
+    {
+      "id": "report-export",
+      "title": "Экспорт отчёта",
+      "keywords": ["экспорт", "export", "печать", "сохранить", "файл"],
+      "description": "Экспорт регламентного отчёта в файл или печать.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Обработать событие перед экспортом",
+          "description": "Используйте EventOnBeforeExportReport / EventOnAfterExportReport.",
+          "interfaces": ["IPrxReportUserEvents"],
+          "members": ["IPrxReportUserEvents.EventOnBeforeExportReport"],
+          "guides": ["KeReport/Intro/Hierarchy/KeReport_H_Events.md", "KeReport/Intro/Hierarchy/KeReport_H_Export.md"],
+          "exampleQueries": ["EventOnBeforeExportReport", "export"]
+        },
+        {
+          "order": 2,
+          "title": "Вызвать экспорт программно",
+          "description": "Используйте методы IPrxReport для экспорта.",
+          "interfaces": ["IPrxReport"],
+          "members": [],
+          "guides": ["KeReport/Intro/KeReport_Programming.md", "KeReport/Samples/KeReport_Example_01_Reports_Export.md"],
+          "exampleQueries": ["IPrxReport", "export"]
+        }
+      ]
+    },
+    {
+      "id": "report-controls",
+      "title": "Элементы управления отчёта",
+      "keywords": ["контрол", "элемент управления", "control", "параметр"],
+      "description": "Работа с элементами управления регламентного отчёта.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Изучить программирование контролов",
+          "description": "Руководство по элементам управления отчёта.",
+          "interfaces": ["IPrxControl", "IPrxReport"],
+          "members": [],
+          "guides": ["KeReport/Intro/KeReport_Programming_Controls.md", "KeReport/Intro/Hierarchy/KeReport_H_Controls.md"],
+          "exampleQueries": ["IPrxControl", "controls"]
+        },
+        {
+          "order": 2,
+          "title": "Реагировать на изменение значения",
+          "description": "Обработчик EventOnChangeControlValue.",
+          "interfaces": ["IPrxReportUserEvents"],
+          "members": ["IPrxReportUserEvents.EventOnChangeControlValue"],
+          "guides": ["KeReport/Intro/Hierarchy/KeReport_H_Events.md"],
+          "exampleQueries": ["EventOnChangeControlValue"]
+        }
+      ]
+    },
+    {
+      "id": "report-data-area",
+      "title": "Область данных отчёта",
+      "keywords": ["область данных", "data area", "вычисление", "recalc"],
+      "description": "Программирование областей данных регламентного отчёта.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Изучить программирование областей данных",
+          "description": "Руководство KeReport_Programming_DataArea.",
+          "interfaces": ["IPrxReport", "IPrxDataArea"],
+          "members": [],
+          "guides": ["KeReport/Intro/KeReport_Programming_DataArea.md", "KeReport/Intro/Hierarchy/KeReport_H_Areas.md"],
+          "exampleQueries": ["DataArea", "IPrxDataArea"]
+        },
+        {
+          "order": 2,
+          "title": "Обработать события вычисления",
+          "description": "EventOnBeforeRecalc / EventOnAfterRecalc.",
+          "interfaces": ["IPrxReportUserEvents"],
+          "members": [],
+          "guides": ["KeReport/Intro/Hierarchy/KeReport_H_Events.md"],
+          "exampleQueries": ["Recalc", "EventOnBeforeRecalc"]
+        }
+      ]
+    },
+    {
+      "id": "sql-query",
+      "title": "Выполнение SQL-запроса",
+      "keywords": ["sql", "запрос", "база данных", "cursor", "command"],
+      "description": "Выполнение SQL через IDatabaseInstance и IDalCommand.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Открыть подключение к БД",
+          "description": "Получите IDatabaseInstance через MetabaseClass.",
+          "interfaces": ["IDatabaseInstance", "MetabaseClass"],
+          "members": ["IDatabaseInstance.Connection"],
+          "guides": ["KeDb/README.md", "Dal/Intro/Dal_Connection.md"],
+          "exampleQueries": ["IDatabaseInstance", "MetabaseClass"]
+        },
+        {
+          "order": 2,
+          "title": "Создать команду и курсор",
+          "description": "IDalCommand.SQL, Params, CreateCursor.",
+          "interfaces": ["IDalCommand", "IDalCursor"],
+          "members": [],
+          "guides": ["Dal/Intro/Dal_Command.md", "Dal/Intro/Cursor_in_the_result.md"],
+          "exampleQueries": ["IDalCommand", "CreateCursor", "SQL"]
+        }
+      ]
+    },
+    {
+      "id": "metabase-open-object",
+      "title": "Открытие объекта репозитория",
+      "keywords": ["репозиторий", "metabase", "открыть", "объект", "ItemById"],
+      "description": "Открытие объектов репозитория через IMetabase.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Получить активный репозиторий",
+          "description": "MetabaseClass.Active.",
+          "interfaces": ["MetabaseClass", "IMetabase"],
+          "members": [],
+          "guides": ["KeSom/README.md", "KeSom/Intro/KeSom_Introduction.md"],
+          "exampleQueries": ["MetabaseClass", "IMetabase"]
+        },
+        {
+          "order": 2,
+          "title": "Найти и открыть объект",
+          "description": "ItemByIdNamespace + Open.",
+          "interfaces": ["IMetabase", "IMetabaseObject"],
+          "members": ["IMetabase.ItemByIdNamespace"],
+          "guides": ["KeSom/Intro/Metabase/working_with_objects.md"],
+          "exampleQueries": ["ItemByIdNamespace", "Open"]
+        }
+      ]
+    },
+    {
+      "id": "dimension-iterate",
+      "title": "Обход справочника",
+      "keywords": ["справочник", "dimension", "элементы", "обход", "iterate"],
+      "description": "Итерация по элементам справочника IDimInstance.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Открыть справочник",
+          "description": "Откройте IDimInstance из репозитория.",
+          "interfaces": ["IDimInstance", "MetabaseClass"],
+          "members": [],
+          "guides": ["KeDims/README.md", "KeDims/Intro/KeDims_Intro.md"],
+          "exampleQueries": ["IDimInstance"]
+        },
+        {
+          "order": 2,
+          "title": "Обойти элементы",
+          "description": "IDimElements: Count, Name, Id.",
+          "interfaces": ["IDimElements", "IDimInstance"],
+          "members": ["IDimInstance.Elements"],
+          "guides": ["KeDims/Intro/Instance/KeDims_Instance.md", "KeDims/Intro/Instance/KeDims_FindElement.md"],
+          "exampleQueries": ["IDimElements", "Elements"]
+        }
+      ]
+    },
+    {
+      "id": "cube-params",
+      "title": "Параметры куба",
+      "keywords": ["куб", "cube", "параметр", "сегмент", "segment"],
+      "description": "Установка параметров и работа с сегментами куба.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Открыть куб",
+          "description": "ICubeInstance через репозиторий.",
+          "interfaces": ["ICubeInstance", "MetabaseClass"],
+          "members": [],
+          "guides": ["KeCubes/README.md"],
+          "exampleQueries": ["ICubeInstance"]
+        },
+        {
+          "order": 2,
+          "title": "Задать параметры",
+          "description": "ICubeInstance.ParamValues.",
+          "interfaces": ["ICubeInstance", "IMetabaseObjectParamValues"],
+          "members": ["ICubeInstance.ParamValues"],
+          "guides": [],
+          "exampleQueries": ["ParamValues", "ICubeInstance"]
+        }
+      ]
+    },
+    {
+      "id": "form-events-module",
+      "title": "Модуль событий формы",
+      "keywords": ["форма", "form", "события", "EventsClass", "FormEvents"],
+      "description": "Модуль обработки событий формы ввода данных.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Создать EventsClass для формы",
+          "description": "Public Class EventsClass: FormEvents.",
+          "interfaces": ["FormEvents"],
+          "members": [],
+          "guides": ["DataEntryForms/README.md", "DataEntryFormsCore/Intro/DataEntryFormsCore_Intro.md"],
+          "exampleQueries": ["FormEvents", "EventsClass"]
+        },
+        {
+          "order": 2,
+          "title": "Реализовать обработчики",
+          "description": "OnBeforeOpen, OnChangeValue и др.",
+          "interfaces": ["IFormUserEvents"],
+          "members": [],
+          "guides": [],
+          "exampleQueries": ["IFormUserEvents", "OnBeforeOpen"]
+        }
+      ]
+    },
+    {
+      "id": "report-format-conditions",
+      "title": "Условное форматирование отчёта",
+      "keywords": ["формат", "условие", "format conditions", "стиль", "ячейка"],
+      "description": "Программное задание условного форматирования ячеек регламентного отчёта.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Изучить API условного форматирования",
+          "description": "Руководство KeReport_Programming_FormatConditions.",
+          "interfaces": ["IPrxReport", "IPrxFormatCondition"],
+          "members": [],
+          "guides": ["KeReport/Intro/KeReport_Programming_FormatConditions.md"],
+          "exampleQueries": ["FormatCondition", "IPrxFormatCondition"]
+        }
+      ]
+    },
+    {
+      "id": "report-page-settings",
+      "title": "Настройки страницы отчёта",
+      "keywords": ["страница", "печать", "поля", "ориентация", "page settings"],
+      "description": "Программная настройка параметров страницы регламентного отчёта.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Настроить параметры страницы",
+          "description": "Руководство KeReport_Programming_PageSettings.",
+          "interfaces": ["IPrxReport", "IPrxPageSettings"],
+          "members": [],
+          "guides": ["KeReport/Intro/KeReport_Programming_PageSettings.md"],
+          "exampleQueries": ["PageSettings", "IPrxPageSettings"]
+        }
+      ]
+    },
+    {
+      "id": "report-sources",
+      "title": "Источники данных отчёта",
+      "keywords": ["источник", "source", "куб", "справочник", "привязка"],
+      "description": "Программирование источников данных регламентного отчёта.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Работа с источниками",
+          "description": "Руководство KeReport_Programming_Source и иерархия KeReport_H_Sources.",
+          "interfaces": ["IPrxReport", "IPrxSource"],
+          "members": [],
+          "guides": ["KeReport/Intro/KeReport_Programming_Source.md", "KeReport/Intro/Hierarchy/KeReport_H_Sources.md"],
+          "exampleQueries": ["IPrxSource", "Source"]
+        }
+      ]
+    },
+    {
+      "id": "report-objects",
+      "title": "Объекты регламентного отчёта",
+      "keywords": ["объект", "лист", "sheet", "диаграмма", "таблица"],
+      "description": "Программирование объектов на листах регламентного отчёта.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "API объектов отчёта",
+          "description": "Руководство KeReport_Programming_Objects.",
+          "interfaces": ["IPrxReport", "IPrxSheet"],
+          "members": [],
+          "guides": ["KeReport/Intro/KeReport_Programming_Objects.md", "KeReport/Intro/Hierarchy/KeReport_H_Objects.md"],
+          "exampleQueries": ["IPrxSheet", "Objects"]
+        }
+      ]
+    },
+    {
+      "id": "dal-stored-procedure",
+      "title": "Вызов хранимой процедуры",
+      "keywords": ["хранимая процедура", "stored procedure", "exec", "function", "dal"],
+      "description": "Выполнение хранимых процедур и функций СУБД через Dal.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Подключение и команда",
+          "description": "Создайте соединение и команду Dal.",
+          "interfaces": ["IDalConnection", "IDalCommand"],
+          "members": [],
+          "guides": ["Dal/Intro/Dal_Connection.md", "Dal/Intro/Dal_Command.md"],
+          "exampleQueries": ["IDalCommand", "ExecStoredProcedure"]
+        },
+        {
+          "order": 2,
+          "title": "Выполнить процедуру",
+          "description": "Dal.ExecStoredProcedure.",
+          "interfaces": ["IDalCommand"],
+          "members": [],
+          "guides": ["Dal/Intro/Dal_ExecStoredProcedure.md"],
+          "exampleQueries": ["ExecStoredProcedure", "StoredProcedure"]
+        }
+      ]
+    },
+    {
+      "id": "dal-async-sql",
+      "title": "Асинхронное выполнение SQL",
+      "keywords": ["асинхронный", "async", "sql", "фоновый", "dal"],
+      "description": "Выполнение SQL-запросов в асинхронном режиме.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Асинхронная команда",
+          "description": "Руководство Dal_Command2.",
+          "interfaces": ["IDalCommand", "IDalAsyncResult"],
+          "members": [],
+          "guides": ["Dal/Intro/Dal_Command2.md"],
+          "exampleQueries": ["Async", "IDalCommand"]
+        }
+      ]
+    },
+    {
+      "id": "dal-temp-tables",
+      "title": "Временные таблицы",
+      "keywords": ["временная таблица", "temp table", "dal", "sql"],
+      "description": "Работа с временными таблицами через Dal.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Создание и использование temp tables",
+          "description": "Руководство working_with_temporary_tables.",
+          "interfaces": ["IDalCommand", "IDalConnection"],
+          "members": [],
+          "guides": ["Dal/Intro/working_with_temporary_tables.md"],
+          "exampleQueries": ["temporary", "temp table"]
+        }
+      ]
+    },
+    {
+      "id": "metabase-security",
+      "title": "Безопасность репозитория",
+      "keywords": ["безопасность", "security", "доступ", "права", "субъект"],
+      "description": "Управление безопасностью и правами доступа в репозитории.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Модель безопасности",
+          "description": "Обзор Security в KeSom.",
+          "interfaces": ["IMetabase", "IMbSubject"],
+          "members": [],
+          "guides": ["KeSom/Intro/Security/Security.md", "KeSom/Intro/Security/AccessControl/AccessControl.md"],
+          "exampleQueries": ["Security", "IMbSubject"]
+        },
+        {
+          "order": 2,
+          "title": "Создание субъекта",
+          "description": "CreateMBSubject.",
+          "interfaces": ["IMbSubject"],
+          "members": [],
+          "guides": ["KeSom/Intro/Security/CreateMBSubject.md"],
+          "exampleQueries": ["CreateMBSubject"]
+        }
+      ]
+    },
+    {
+      "id": "metabase-abac",
+      "title": "Атрибутный доступ ABAC",
+      "keywords": ["abac", "атрибут", "доступ", "keabac", "политика"],
+      "description": "Настройка атрибутного контроля доступа ABAC.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Структура атрибутного доступа",
+          "description": "Формирование структуры AttrAccess.",
+          "interfaces": ["IAttrAccess"],
+          "members": [],
+          "guides": ["KeABAC/Intro/Structure_AttrAccess.md", "KeABAC/Intro/KeABAC_Programming.md"],
+          "exampleQueries": ["IAttrAccess", "ABAC"]
+        },
+        {
+          "order": 2,
+          "title": "Определение прав",
+          "description": "Права субъекта к объекту.",
+          "interfaces": ["IAttrAccess"],
+          "members": [],
+          "guides": ["KeABAC/Intro/Definition_Access_Permissions.md"],
+          "exampleQueries": ["Access", "Permission"]
+        }
+      ]
+    },
+    {
+      "id": "metabase-update",
+      "title": "Обновление объектов репозитория",
+      "keywords": ["обновление", "update", "версия", "репозиторий"],
+      "description": "Работа с обновлениями объектов репозитория.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "API обновлений",
+          "description": "work_with_update в KeSom.",
+          "interfaces": ["IMetabase", "IUpdateManager"],
+          "members": [],
+          "guides": ["KeSom/Intro/Update/work_with_update.md"],
+          "exampleQueries": ["Update", "IUpdateManager"]
+        }
+      ]
+    },
+    {
+      "id": "dimension-selection",
+      "title": "Отметка элементов справочника",
+      "keywords": ["отметка", "selection", "выбор", "справочник", "элементы"],
+      "description": "Работа с отметкой и выбором элементов справочника.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "API отметки",
+          "description": "KeDims_Selection.",
+          "interfaces": ["IDimSelection", "IDimInstance"],
+          "members": [],
+          "guides": ["KeDims/Intro/Selection/KeDims_Selection.md", "KeDims/Samples/KeDims_Sample_WorkSelection.md"],
+          "exampleQueries": ["IDimSelection", "Selection"]
+        }
+      ]
+    },
+    {
+      "id": "dimension-calendar",
+      "title": "Календарный справочник",
+      "keywords": ["календарь", "calendar", "период", "дата", "справочник"],
+      "description": "Создание и работа с календарными справочниками.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Структура календарного справочника",
+          "description": "KeDims_StructureCalendar.",
+          "interfaces": ["IDimInstance", "ICalendarDimension"],
+          "members": [],
+          "guides": ["KeDims/Intro/Dimensions/KeDims_StructureCalendar.md", "KeDims/Samples/KeDims_Sample1.md"],
+          "exampleQueries": ["Calendar", "IDimInstance"]
+        }
+      ]
+    },
+    {
+      "id": "pivot-events-module",
+      "title": "События сводной таблицы",
+      "keywords": ["pivot", "сводная", "события", "events", "kepivot"],
+      "description": "Обработка событий сводной таблицы KePivot.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Иерархия событий",
+          "description": "Hierarchy_Events в KePivot.",
+          "interfaces": ["IPivotEvents", "IPivotTable"],
+          "members": [],
+          "guides": ["KePivot/Intro/Hierarchy/Hierarchy_Events.md", "KePivot/Intro/KePivot_Programming.md"],
+          "exampleQueries": ["IPivotEvents", "Pivot"]
+        }
+      ]
+    },
+    {
+      "id": "pivot-filter-sort",
+      "title": "Фильтрация и сортировка сводной таблицы",
+      "keywords": ["фильтр", "сортировка", "pivot", "сводная", "filter"],
+      "description": "Программная фильтрация и сортировка сводной таблицы.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Фильтр и сортировка",
+          "description": "Hierarchy_Filter и Hierarchy_Sort.",
+          "interfaces": ["IPivotFilter", "IPivotSort"],
+          "members": [],
+          "guides": ["KePivot/Intro/Hierarchy/Hierarchy_Filter.md", "KePivot/Intro/Hierarchy/Hierarchy_Sort.md"],
+          "exampleQueries": ["Filter", "Sort", "IPivotTable"]
+        }
+      ]
+    },
+    {
+      "id": "modeling-create-problem",
+      "title": "Создание задачи моделирования",
+      "keywords": ["моделирование", "задача", "problem", "kems", "оптимизация"],
+      "description": "Создание контейнера и задачи моделирования KeMs.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Контейнер моделирования",
+          "description": "Создание контейнера KeMs.",
+          "interfaces": ["IMsModel", "IMsProblem"],
+          "members": [],
+          "guides": ["KeMs/Samples/KeMs_Sample1.md", "KeMs/Intro/KeMs_Programming.md"],
+          "exampleQueries": ["IMsProblem", "IMsModel"]
+        },
+        {
+          "order": 2,
+          "title": "Задача моделирования",
+          "description": "KeMs_Programming_Problem.",
+          "interfaces": ["IMsProblem"],
+          "members": [],
+          "guides": ["KeMs/Intro/KeMs_Programming_Problem.md", "KeMs/Samples/KeMs_Sample8.md"],
+          "exampleQueries": ["Problem", "IMsProblem"]
+        }
+      ]
+    },
+    {
+      "id": "modeling-scenario",
+      "title": "Сценарий моделирования",
+      "keywords": ["сценарий", "scenario", "моделирование", "kems"],
+      "description": "Программирование сценариев моделирования.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "API сценария",
+          "description": "KeMs_Programming_Scenario.",
+          "interfaces": ["IMsScenario"],
+          "members": [],
+          "guides": ["KeMs/Intro/KeMs_Programming_Scenario.md"],
+          "exampleQueries": ["Scenario", "IMsScenario"]
+        }
+      ]
+    },
+    {
+      "id": "etl-pipeline",
+      "title": "ETL-преобразование данных",
+      "keywords": ["etl", "преобразование", "трансформация", "поток", "keetl"],
+      "description": "Построение ETL-пайплайна: фильтрация, соединение, группировка, объединение.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Фильтрация и соединение",
+          "description": "Базовые преобразования KeEtl.",
+          "interfaces": ["IEtlTransform", "IEtlFilter"],
+          "members": [],
+          "guides": ["KeEtl/Samples/Filter.md", "KeEtl/Samples/Join.md"],
+          "exampleQueries": ["Filter", "Join", "IEtlTransform"]
+        },
+        {
+          "order": 2,
+          "title": "Группировка и объединение",
+          "description": "Group, Union, Sort.",
+          "interfaces": ["IEtlTransform"],
+          "members": [],
+          "guides": ["KeEtl/Samples/Group.md", "KeEtl/Samples/Union.md", "KeEtl/Samples/Sort.md"],
+          "exampleQueries": ["Group", "Union", "Sort"]
+        },
+        {
+          "order": 3,
+          "title": "Дедупликация и разбиение",
+          "description": "Deduplicate, Split, Transformation.",
+          "interfaces": ["IEtlTransform"],
+          "members": [],
+          "guides": ["KeEtl/Samples/Deduplicate.md", "KeEtl/Samples/Split.md", "KeEtl/Samples/Transformation.md"],
+          "exampleQueries": ["Deduplicate", "Split", "Transformation"]
+        }
+      ]
+    },
+    {
+      "id": "express-open-params",
+      "title": "Открытие экспресс-отчёта с параметрами",
+      "keywords": ["express", "экспресс", "параметр", "открыть", "отметка"],
+      "description": "Открытие экспресс-отчёта с заданными параметрами куба и отметкой.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Открыть с параметрами",
+          "description": "Пример OpenWithParam.",
+          "interfaces": ["IEaxWorkbook", "ICubeInstance"],
+          "members": [],
+          "guides": ["KeExpress/Samples/OpenWithParam.md", "KeExpress/Intro/Programming.md"],
+          "exampleQueries": ["OpenWithParam", "IEaxWorkbook"]
+        }
+      ]
+    },
+    {
+      "id": "express-export",
+      "title": "Экспорт экспресс-отчёта",
+      "keywords": ["express", "экспорт", "export", "eax", "отчёт"],
+      "description": "Экспорт экспресс-отчётов и рабочих книг.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Экспорт отчётов",
+          "description": "KeExpress_ReportsExport.",
+          "interfaces": ["IEaxWorkbook"],
+          "members": [],
+          "guides": ["KeExpress/Samples/KeExpress_ReportsExport.md", "KeExpress/Intro/Hierarchy/Export_Express_Report.md"],
+          "exampleQueries": ["Export", "IEaxWorkbook"]
+        }
+      ]
+    },
+    {
+      "id": "ppsom-connect",
+      "title": "Подключение к репозиторию через PPSOM",
+      "keywords": ["ppsom", "web service", "подключение", "репозиторий", "soap"],
+      "description": "Подключение к репозиторию через веб-сервис PPSOMService.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Подключение",
+          "description": "ConnectToRepository.",
+          "interfaces": ["IPPSomService"],
+          "members": [],
+          "guides": ["PPSOMService/Intro/ConnectToRepository.md", "PPSOMService/Intro/PP7Service_Intro.md"],
+          "exampleQueries": ["PPSOM", "Connect"]
+        },
+        {
+          "order": 2,
+          "title": "Использование API",
+          "description": "PP7Service_Using.",
+          "interfaces": ["IPPSomService"],
+          "members": [],
+          "guides": ["PPSOMService/Intro/PP7Service_Using.md"],
+          "exampleQueries": ["PP7Service"]
+        }
+      ]
+    },
+    {
+      "id": "tabsheet-format-conditions",
+      "title": "Условное форматирование TabSheet",
+      "keywords": ["tabsheet", "формат", "условие", "таблица", "ячейка"],
+      "description": "Условное форматирование в компоненте TabSheet.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "FormatConditions API",
+          "description": "TabSheet FormatConditions.",
+          "interfaces": ["ITabFormatConditions", "ITabSheet"],
+          "members": [],
+          "guides": ["TabSheet/Intro/FormatConditions.md", "TabSheet/Intro/Hierarchy/ITabFormatConditions.md"],
+          "exampleQueries": ["ITabFormatConditions", "FormatConditions"]
+        }
+      ]
+    },
+    {
+      "id": "tabsheet-export-print",
+      "title": "Экспорт и печать TabSheet",
+      "keywords": ["tabsheet", "экспорт", "печать", "export", "print"],
+      "description": "Экспорт и печать табличных листов TabSheet.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Экспорт и печать",
+          "description": "SheetExporter и SheetPrinter.",
+          "interfaces": ["ITabSheetExporter", "ITabSheetPrinter"],
+          "members": [],
+          "guides": ["TabSheet/Intro/SheetExporter.md", "TabSheet/Intro/SheetPrinter.md"],
+          "exampleQueries": ["SheetExporter", "SheetPrinter"]
+        }
+      ]
+    },
+    {
+      "id": "bisearch-index-search",
+      "title": "Индексация и поиск BISearch",
+      "keywords": ["поиск", "индексация", "bisearch", "fulltext", "search"],
+      "description": "Индексация данных и полнотекстовый поиск через KeBISearch.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Индексация",
+          "description": "Настройка и запуск индексации.",
+          "interfaces": ["ISearchEngine", "IImportExecutor"],
+          "members": [],
+          "guides": ["KeBISearch/Intro/indexing.md"],
+          "exampleQueries": ["indexing", "ISearchEngine"]
+        },
+        {
+          "order": 2,
+          "title": "Поиск",
+          "description": "Выполнение поискового запроса.",
+          "interfaces": ["ISearchExecutor"],
+          "members": [],
+          "guides": ["KeBISearch/Intro/Hierarchy/H_ISearchExecutor.md"],
+          "exampleQueries": ["Search", "ISearchExecutor"]
+        }
+      ]
+    },
+    {
+      "id": "fore-scheduled-tasks",
+      "title": "Запланированные задачи Fore",
+      "keywords": ["задача", "расписание", "scheduled", "kefore", "планировщик"],
+      "description": "Создание контейнера запланированных задач KeFore.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Контейнер задач",
+          "description": "KeFore_Sample2 — создание контейнера.",
+          "interfaces": ["IForeTask", "IForeScheduler"],
+          "members": [],
+          "guides": ["KeFore/Samples/KeFore_Sample2.md"],
+          "exampleQueries": ["IForeTask", "Scheduler"]
+        }
+      ]
+    },
+    {
+      "id": "send-email-smtp",
+      "title": "Отправка email через SMTP",
+      "keywords": ["email", "smtp", "письмо", "почта", "modnet"],
+      "description": "Отправка писем через SMTP-клиент ModNet.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "SMTP Client",
+          "description": "SMTP_Client_Send_MailMessage.",
+          "interfaces": ["ISmtpClient", "IMailMessage"],
+          "members": [],
+          "guides": ["ModNet/Samples/SMTP_Client_Send_MailMessage.md"],
+          "exampleQueries": ["SMTP", "MailMessage"]
+        }
+      ]
+    },
+    {
+      "id": "create-database-table",
+      "title": "Создание БД и таблицы",
+      "keywords": ["база данных", "таблица", "создать", "kedb", "database"],
+      "description": "Создание базы данных и таблицы в репозитории KeDb.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Создать базу данных",
+          "description": "KeDb_Sample1.",
+          "interfaces": ["IDatabaseInstance", "MetabaseClass"],
+          "members": [],
+          "guides": ["KeDb/Samples/KeDb_Sample1.md"],
+          "exampleQueries": ["IDatabaseInstance", "Database"]
+        },
+        {
+          "order": 2,
+          "title": "Создать таблицу",
+          "description": "KeDb_Sample2.",
+          "interfaces": ["IDatabaseTable", "IDatabaseInstance"],
+          "members": [],
+          "guides": ["KeDb/Samples/KeDb_Sample2.md"],
+          "exampleQueries": ["IDatabaseTable", "Table"]
+        }
+      ]
+    },
+    {
+      "id": "create-standard-cube",
+      "title": "Создание стандартного куба",
+      "keywords": ["куб", "стандартный", "создать", "kecubes", "cube"],
+      "description": "Полный цикл создания стандартного куба в репозитории.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Создать стандартный куб",
+          "description": "CreateStdCube.",
+          "interfaces": ["ICubeInstance", "MetabaseClass"],
+          "members": [],
+          "guides": ["KeCubes/Samples/CreateStdCube.md"],
+          "exampleQueries": ["CreateStdCube", "ICubeInstance"]
+        },
+        {
+          "order": 2,
+          "title": "Загрузить данные",
+          "description": "CreateCubeLoader / LoadDataInExistingObject.",
+          "interfaces": ["ICubeLoader", "ICubeInstance"],
+          "members": [],
+          "guides": ["KeCubes/Samples/CreateCubeLoader.md", "KeCubes/Samples/LoadDataInExistingObject.md"],
+          "exampleQueries": ["CubeLoader", "LoadData"]
+        }
+      ]
+    },
+    {
+      "id": "rds-dictionary",
+      "title": "Создание справочника НСИ",
+      "keywords": ["нси", "rds", "справочник", "mdm", "керс"],
+      "description": "Создание и наполнение справочника НСИ KeRds.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Создать справочник НСИ",
+          "description": "KeRds_Sample8.",
+          "interfaces": ["IRdsDictionary", "MetabaseClass"],
+          "members": [],
+          "guides": ["KeRds/Samples/KeRds_Sample8.md"],
+          "exampleQueries": ["IRdsDictionary", "Rds"]
+        }
+      ]
+    },
+    {
+      "id": "laner-workbook",
+      "title": "Рабочая книга Laner",
+      "keywords": ["laner", "рабочая книга", "workbook", "диаграмма", "аналитика"],
+      "description": "Создание и наполнение рабочей книги Laner с диаграммами.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Создать рабочую книгу",
+          "description": "Create_Workbook.",
+          "interfaces": ["ILanerWorkbook", "ILanerSheet"],
+          "members": [],
+          "guides": ["Laner/Samples/Create_Workbook.md", "Laner/Samples/Laner_Samples_1_LanerContext.md"],
+          "exampleQueries": ["LanerWorkbook", "ILanerWorkbook"]
+        },
+        {
+          "order": 2,
+          "title": "Экспорт книги",
+          "description": "Workbook_Export.",
+          "interfaces": ["ILanerWorkbook"],
+          "members": [],
+          "guides": ["Laner/Samples/Workbook_Export.md"],
+          "exampleQueries": ["Export", "Workbook"]
+        }
+      ]
+    },
+    {
+      "id": "python-ml-integration",
+      "title": "Интеграция с Python / ML",
+      "keywords": ["python", "машинное обучение", "ml", "logistic", "kepython"],
+      "description": "Использование Python-сборок и методов интеллектуального анализа.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Python assembly",
+          "description": "Use_Assembly_Python_In_Programm.",
+          "interfaces": ["IPythonAssembly"],
+          "members": [],
+          "guides": ["KePython/Intro/Use_Assembly_Python_In_Programm.md"],
+          "exampleQueries": ["Python", "IPythonAssembly"]
+        },
+        {
+          "order": 2,
+          "title": "ML методы",
+          "description": "LogisticRegression из Python.",
+          "interfaces": ["IPythonAssembly"],
+          "members": [],
+          "guides": ["KePython/Samples/Use_LogisticRegression_from_Python.md"],
+          "exampleQueries": ["LogisticRegression", "Python"]
+        }
+      ]
+    },
+    {
+      "id": "xml-cdata-msxml",
+      "title": "Работа с XML (MSXML, CDATA)",
+      "keywords": ["xml", "cdata", "msxml", "modxml", "парсинг"],
+      "description": "Работа с XML-документами через ModXml.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "MSXML6",
+          "description": "work_using_msxml6.",
+          "interfaces": ["IXmlDocument"],
+          "members": [],
+          "guides": ["ModXml/Samples/work_using_msxml6.md"],
+          "exampleQueries": ["XmlDocument", "MSXML"]
+        },
+        {
+          "order": 2,
+          "title": "CDATA секции",
+          "description": "work_with_cdata.",
+          "interfaces": ["IXmlDocument"],
+          "members": [],
+          "guides": ["ModXml/Samples/work_with_cdata.md"],
+          "exampleQueries": ["CDATA", "Xml"]
+        }
+      ]
+    },
+    {
+      "id": "adhoc-panel",
+      "title": "Аналитическая панель Adhoc",
+      "keywords": ["adhoc", "аналитика", "панель", "dashboard", "uiadhoc"],
+      "description": "Программирование аналитической панели Adhoc.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Аналитическая панель",
+          "description": "01_Adhoc sample.",
+          "interfaces": ["IAdhocPanel"],
+          "members": [],
+          "guides": ["Specifications/AdhocSpecification/Samples/01_Adhoc.md"],
+          "exampleQueries": ["Adhoc", "IAdhocPanel"]
+        },
+        {
+          "order": 2,
+          "title": "Инфоблок и таблица",
+          "description": "02_InfoBlock, 03_TabPanelTable.",
+          "interfaces": ["IAdhocPanel"],
+          "members": [],
+          "guides": [
+            "Specifications/AdhocSpecification/Samples/02_InfoBlock.md",
+            "Specifications/AdhocSpecification/Samples/03_TabPanelTable.md"
+          ],
+          "exampleQueries": ["InfoBlock", "TabPanel"]
+        }
+      ]
+    },
+    {
+      "id": "statlib-timeseries",
+      "title": "Статистические расчёты StatLib",
+      "keywords": ["статистика", "statlib", "arma", "прогноз", "ряд"],
+      "description": "Статистические методы: сезонная ARMA, нелинейные уравнения.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Сезонная ARMA",
+          "description": "Sample_1_SeasARMA.",
+          "interfaces": ["IStatLib"],
+          "members": [],
+          "guides": ["StatLib/Samples/Sample_1_SeasARMA.md"],
+          "exampleQueries": ["SeasARMA", "StatLib"]
+        },
+        {
+          "order": 2,
+          "title": "Нелинейные уравнения",
+          "description": "Sample_1_NonLinearEqs_Execute.",
+          "interfaces": ["IStatLib"],
+          "members": [],
+          "guides": ["StatLib/Samples/Sample_1_NonLinearEqs_Execute.md"],
+          "exampleQueries": ["NonLinearEqs", "StatLib"]
+        }
+      ]
+    },
+    {
+      "id": "audit-log",
+      "title": "Аудит действий в репозитории",
+      "keywords": ["аудит", "audit", "журнал", "лог", "безопасность"],
+      "description": "Ведение журнала аудита действий пользователей.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "API аудита",
+          "description": "Audit и AuditLog в KeSom.",
+          "interfaces": ["IAuditLog"],
+          "members": [],
+          "guides": ["KeSom/Intro/Security/Audit.md", "KeSom/Intro/Security/AuditLog.md"],
+          "exampleQueries": ["Audit", "AuditLog"]
+        }
+      ]
+    },
+    {
+      "id": "report-parameter-validation",
+      "title": "Проверка параметров отчёта",
+      "keywords": ["параметр", "проверка", "валидация", "тип значения", "отчёт"],
+      "description": "Редактирование отчёта с проверкой типа значения параметра.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Валидация параметра",
+          "description": "Parameter_value_type sample.",
+          "interfaces": ["IPrxReport", "IPrxControl"],
+          "members": ["IPrxReportUserEvents.EventOnChangeControlValue"],
+          "guides": ["KeReport/Samples/Parameter_value_type.md", "KeReport/Intro/KeReport_Programming_Controls.md"],
+          "exampleQueries": ["Parameter", "ControlValue"]
+        }
+      ]
+    },
+    {
+      "id": "db-edit-extract-data",
+      "title": "Редактирование и извлечение данных БД",
+      "keywords": ["редактирование", "извлечение", "данные", "таблица", "kedb"],
+      "description": "Редактирование и извлечение данных из таблиц базы данных.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Извлечение данных",
+          "description": "KeDb_Sample_ExtractData.",
+          "interfaces": ["IDatabaseInstance", "IDalCursor"],
+          "members": [],
+          "guides": ["KeDb/Samples/KeDb_Sample_ExtractData.md"],
+          "exampleQueries": ["ExtractData", "IDatabaseInstance"]
+        },
+        {
+          "order": 2,
+          "title": "Редактирование данных",
+          "description": "KeDb_Sample_EditData.",
+          "interfaces": ["IDatabaseInstance", "IDalCursor"],
+          "members": [],
+          "guides": ["KeDb/Samples/KeDb_Sample_EditData.md"],
+          "exampleQueries": ["EditData", "IDatabaseInstance"]
+        }
+      ]
+    }
+  ]
+}

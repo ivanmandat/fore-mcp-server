@@ -8,6 +8,13 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
+    "index:examples": "tsx scripts/build-code-examples-index.ts",
+    "index:guides": "tsx scripts/build-guides-index.ts",
+    "index:members": "tsx scripts/build-members-index.ts",
+    "index:fulltext": "tsx scripts/build-fulltext-index.ts",
+    "index:all": "npm run index:examples && npm run index:guides && npm run index:members && npm run index:recipes && npm run index:fulltext",
+    "index:recipes": "tsx scripts/build-task-recipes-catalog.ts",
+    "test:smoke": "tsx scripts/smoke-test.ts",
     "prepare": "npm run build"
   },
   "keywords": [
