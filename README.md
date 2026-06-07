@@ -201,3 +201,5 @@ fore-mcp-server/
 ## Лицензия
 
 MIT
+
+<!-- CHECKPOINT id="ckpt_mq4bqe9c_r2msk5" time="2026-06-07T21:58:42.864Z" note="auto" fixes=0 questions=0 highlights=0 sections="" -->
