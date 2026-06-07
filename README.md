@@ -1,13 +1,16 @@
 # FORe MCP Server
 
-MCP (Model Context Protocol) сервер для работы с документацией FORe (Foresight BI Desktop). Предоставляет AI-ассистентам доступ к 4900+ интерфейсам и 42000+ страницам документации.
+MCP-сервер для справки FORe (Foresight BI Desktop). Даёт ассистенту доступ к ~5000 интерфейсам, ~21 000 членам API, ~42 000 страницам документации и примерам кода.
 
-## Возможности
+## Что умеет
 
-- **Поиск по документации** - поиск интерфейсов, классов и документации
-- **Информация об интерфейсах** - описание, свойства, методы
-- **Справка по синтаксису** - базовый синтаксис, управляющие конструкции, типы
-- **Примеры кода** - готовые паттерны для популярных задач
+- **API**: поиск интерфейсов и классов, свойства, методы, связанные гайды и примеры
+- **Члены API**: свойства, методы, события (например `IPrxReportUserEvents.EventOnBeforeOpenReport`)
+- **Руководства**: Intro, Samples, Programming по модулям
+- **Рецепты задач**: пошаговые планы для типовых сценариев (модуль событий отчёта, SQL, куб и т.д.)
+- **Примеры кода**: паттерны FORe/JS/HTML из официальной справки
+- **Единый поиск**: рецепты, гайды, API, члены и примеры в одном запросе
+- **Полнотекст**: поиск по прозе всей справки на русском и английском
 
 ## Установка
 
@@ -17,9 +20,15 @@ npm install
 npm run build
 ```
 
-## Использование с Cursor
+После первой сборки или обновления `docs/` пересоберите индексы:
 
-Добавьте в настройки Cursor (`~/.cursor/mcp.json`):
+```bash
+npm run index:all
+```
+
+## Подключение в Cursor
+
+Добавьте в `~/.cursor/mcp.json`:
 
 ```json
 {
@@ -32,58 +41,125 @@ npm run build
 }
 ```
 
-## Доступные инструменты
+## Как искать по задаче
 
-### search_fore_docs
-Поиск по документации FORe.
+Пример: *«Модуль отчёта: при открытии задать дату, при смене контрола пересчитать»*
 
-```json
-{
-  "query": "IPrxReport",
-  "limit": 10
-}
+```
+1. search_fore_knowledge("модуль событий отчёта")
+   рецепт + гайд + API в одном ответе
+
+2. get_fore_context("модуль событий отчёта")
+   полный контекст: рецепт, гайды, члены API, suggestedNextTools
+
+3. get_task_recipe("report-events-module")
+   пошаговый план со ссылками на гайды и API
+
+4. get_guide("KeReport/Intro/Hierarchy/KeReport_H_Events.md")
+   как устроен модуль событий
+
+5. get_member_info("IPrxReportUserEvents.EventOnBeforeOpenReport")
+   синтаксис и параметры события
+
+6. get_code_examples("EventsClass")
+   шаблон кода
 ```
 
-### get_interface_info
-Получить информацию об интерфейсе.
+Если структурированный поиск ничего не нашёл, попробуйте `search_fore_fulltext`.
+
+## Инструменты MCP
+
+### С чего начать
+
+| Инструмент | Зачем |
+|------------|-------|
+| `search_fore_knowledge` | Поиск по всем индексам, в ответе есть подсказки `nextTool` |
+| `get_fore_context` | Собрать контекст для задачи одним вызовом |
+| `search_fore_fulltext` | Полнотекст по 42k страницам справки |
 
 ```json
-{
-  "name": "IPrxReport"
-}
+{ "query": "модуль событий отчёта", "limit": 15 }
 ```
 
-### get_fore_syntax
-Справка по синтаксису FORe.
+### Рецепты задач
+
+| Инструмент | Зачем |
+|------------|-------|
+| `search_task_recipes` | Найти рецепт по описанию задачи |
+| `get_task_recipe` | Полный план с гайдами, API и примерами |
 
 ```json
-{
-  "topic": "basics"
-}
+{ "id": "report-events-module" }
 ```
 
-Доступные темы: `basics`, `control-flow`, `types`, `operators`, `events`, `sql`, `dimensions`, `cubes`
+### Руководства
 
-### get_code_examples
-Примеры кода для интерфейсов и паттернов.
+| Инструмент | Зачем |
+|------------|-------|
+| `search_fore_guides` | Поиск по Intro / Samples / Programming |
+| `get_guide` | Полный markdown руководства |
+| `list_module_guides` | Все гайды модуля (KeReport, KeDb, …) |
 
 ```json
-{
-  "topic": "sql-execution"
-}
+{ "query": "модуль событий отчёта", "module": "KeReport" }
 ```
+
+### API и члены
+
+| Инструмент | Зачем |
+|------------|-------|
+| `search_fore_docs` | Поиск интерфейсов и классов |
+| `get_interface_info` | Описание, свойства, методы, связанные гайды |
+| `search_fore_members` | Поиск свойств, методов, событий |
+| `get_member_info` | Синтаксис, описание, параметры |
+| `list_interface_members` | Список членов интерфейса |
+
+```json
+{ "id": "IPrxReportUserEvents.EventOnBeforeOpenReport" }
+```
+
+### Примеры кода
+
+| Инструмент | Зачем |
+|------------|-------|
+| `get_code_examples` | Примеры для сущности |
+| `search_code_examples` | Поиск по имени, ключевому слову, паттерну |
+| `get_code_example` | Один пример по ID |
+
+```json
+{ "entity": "IPrxReport", "limit": 5 }
+```
+
+### Синтаксис FORe
+
+| Инструмент | Зачем |
+|------------|-------|
+| `get_fore_syntax` | Краткая справка по языку |
+
+Темы: `basics`, `control-flow`, `types`, `operators`, `events`, `sql`, `dimensions`, `cubes`
+
+```json
+{ "topic": "events" }
+```
+
+## Сборка индексов
+
+| Команда | Что строит | Файл |
+|---------|------------|------|
+| `npm run index:examples` | Примеры кода | `data/code-examples-index.json` |
+| `npm run index:guides` | Руководства | `data/guides-index.json` |
+| `npm run index:members` | Члены API | `data/members-index.json` |
+| `npm run index:recipes` | Рецепты задач | `data/task-recipes.json` |
+| `npm run index:fulltext` | Полнотекст | `data/fulltext-index.json` |
+| `npm run index:all` | Всё сразу | |
 
 ## Разработка
 
 ```bash
-# Запуск в режиме разработки
-npm run dev
-
-# Сборка
-npm run build
-
-# Запуск
-npm start
+npm run dev      # режим разработки
+npm run build    # сборка
+npm start        # запуск
+npm run test:smoke  # smoke-тесты
 ```
 
 ## Структура проекта
@@ -91,25 +167,37 @@ npm start
 ```
 fore-mcp-server/
 ├── src/
-│   ├── index.ts      # Точка входа MCP сервера
-│   ├── search.ts     # Поиск и информация об интерфейсах
-│   └── resources.ts  # Работа с файлами документации
-├── data/
-│   └── docs-index.json  # Индекс документации (4947 записей)
-├── docs/                # Markdown документация (42551 файлов)
+│   ├── index.ts            # точка входа MCP
+│   ├── search.ts           # интерфейсы и классы
+│   ├── guides.ts           # руководства
+│   ├── members.ts          # члены API
+│   ├── task-recipes.ts     # рецепты задач
+│   ├── knowledge-search.ts # единый поиск
+│   ├── fulltext.ts         # полнотекст
+│   ├── code-examples.ts    # примеры кода
+│   └── resources.ts        # MCP resources (docs/)
+├── scripts/
+│   ├── build-*-index.ts
+│   ├── smoke-test.ts
+│   └── lib/markdown-parse.ts
+├── data/                   # JSON-индексы
+├── docs/                   # markdown-справка
 ├── package.json
 └── tsconfig.json
 ```
 
-## Статистика документации
+## Статистика (на момент сборки индексов)
 
 | Метрика | Значение |
 |---------|----------|
-| Markdown файлов | 42,551 |
-| Объем текста | ~97.5 МБ |
-| Интерфейсов/классов в индексе | 4,947 |
+| Markdown-файлов | 42 551 |
+| Полнотекстовый индекс | 42 551 документ (~65 МБ) |
+| Интерфейсов и классов | 4 947 |
+| Членов API | 21 432 |
+| Примеров кода | 5 276 |
+| Руководств | 478 |
+| Рецептов задач | 498 |
 
 ## Лицензия
 
 MIT
-
