@@ -28,6 +28,8 @@ npm run index:all
 
 ## Подключение в Cursor
 
+### Локально (stdio)
+
 Добавьте в `~/.cursor/mcp.json`:
 
 ```json
@@ -40,6 +42,48 @@ npm run index:all
   }
 }
 ```
+
+### Удалённый сервер (VPS / корпоративный сервер)
+
+Сервер поддерживает **Streamable HTTP** — один инстанс для всей команды.
+
+**1. Запуск на сервере**
+
+```bash
+npm run build
+npm run start:http
+```
+
+Или через Docker:
+
+```bash
+docker compose up -d --build
+```
+
+**2. Подключение в Cursor**
+
+```json
+{
+  "mcpServers": {
+    "fore": {
+      "url": "https://mcp.example.com/mcp"
+    }
+  }
+}
+```
+
+**3. Reverse proxy (nginx)**
+
+Пример конфигурации: [`deploy/nginx.conf.example`](deploy/nginx.conf.example)
+
+| Переменная | По умолчанию | Описание |
+|------------|--------------|----------|
+| `FORE_MCP_TRANSPORT` | `stdio` | `http` для сетевого режима |
+| `MCP_HOST` | `0.0.0.0` | Адрес прослушивания |
+| `MCP_PORT` | `3000` | Порт |
+| `MCP_PATH` | `/mcp` | HTTP-путь MCP |
+
+Health-check: `GET /health`
 
 ## Как искать по задаче
 
@@ -156,9 +200,11 @@ npm run index:all
 ## Разработка
 
 ```bash
-npm run dev      # режим разработки
-npm run build    # сборка
-npm start        # запуск
+npm run dev         # локально (stdio)
+npm run dev:http    # HTTP на :3000
+npm run build       # сборка
+npm start           # stdio
+npm run start:http  # HTTP-сервер
 npm run test:smoke  # smoke-тесты
 ```
 
@@ -167,7 +213,9 @@ npm run test:smoke  # smoke-тесты
 ```
 fore-mcp-server/
 ├── src/
-│   ├── index.ts            # точка входа MCP
+│   ├── index.ts            # точка входа (stdio / --http)
+│   ├── server.ts           # MCP-сервер и инструменты
+│   ├── http-server.ts      # Streamable HTTP для VPS
 │   ├── search.ts           # интерфейсы и классы
 │   ├── guides.ts           # руководства
 │   ├── members.ts          # члены API
@@ -201,3 +249,5 @@ fore-mcp-server/
 ## Лицензия
 
 MIT
+
+<!-- CHECKPOINT id="ckpt_mq4c3988_mieddy" time="2026-06-07T22:08:42.872Z" note="auto" fixes=0 questions=0 highlights=0 sections="" -->

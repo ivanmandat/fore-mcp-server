@@ -7,7 +7,9 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
+    "start:http": "node dist/index.js --http",
     "dev": "tsx src/index.ts",
+    "dev:http": "tsx src/index.ts --http",
     "index:examples": "tsx scripts/build-code-examples-index.ts",
     "index:guides": "tsx scripts/build-guides-index.ts",
     "index:members": "tsx scripts/build-members-index.ts",

@@ -1,0 +1,17 @@
+services:
+  fore-mcp:
+    build: .
+    ports:
+      - "${MCP_PORT:-3000}:3000"
+    environment:
+      FORE_MCP_TRANSPORT: http
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: 3000
+      MCP_PATH: /mcp
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
