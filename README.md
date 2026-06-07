@@ -250,4 +250,3 @@ fore-mcp-server/
 
 MIT
 
-<!-- CHECKPOINT id="ckpt_mq4c3988_mieddy" time="2026-06-07T22:08:42.872Z" note="auto" fixes=0 questions=0 highlights=0 sections="" -->
